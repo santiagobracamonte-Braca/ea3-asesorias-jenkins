@@ -1,0 +1,9 @@
+node_modules/
+.env
+.env.*
+!.env.example
+*.log
+.DS_Store
+coverage/
+_render_docx/
+Tutorial_EA3_Jenkins_BORRADOR.docx

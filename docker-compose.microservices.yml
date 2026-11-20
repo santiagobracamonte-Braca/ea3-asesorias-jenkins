@@ -1,0 +1,46 @@
+services:
+  mongodb:
+    image: mongo:7
+    container_name: asesorias-mongodb-decoupled
+    restart: unless-stopped
+    volumes:
+      - mongo_decoupled_data:/data/db
+    healthcheck:
+      test: ["CMD", "mongosh", "--quiet", "mongodb://localhost:27017/admin", "--eval", "db.runCommand({ping:1}).ok"]
+      interval: 5s
+      timeout: 5s
+      retries: 15
+  core:
+    image: ${DOCKERHUB_NAMESPACE:-local}/iudigital-asesorias-core:${IMAGE_TAG:-latest}
+    build:
+      context: .
+      dockerfile: Dockerfile.core
+    container_name: iudigital-asesorias-core
+    restart: unless-stopped
+    environment:
+      MONGODB_URI: mongodb://mongodb:27017/iudigital_asesorias
+      APP_MODE: core
+      PORT: 3000
+    ports:
+      - "3002:3000"
+    depends_on:
+      mongodb:
+        condition: service_healthy
+  projects:
+    image: ${DOCKERHUB_NAMESPACE:-local}/iudigital-asesorias-projects:${IMAGE_TAG:-latest}
+    build:
+      context: .
+      dockerfile: Dockerfile.projects
+    container_name: iudigital-asesorias-projects
+    restart: unless-stopped
+    environment:
+      MONGODB_URI: mongodb://mongodb:27017/iudigital_asesorias
+      APP_MODE: projects
+      PORT: 3001
+    ports:
+      - "3001:3001"
+    depends_on:
+      mongodb:
+        condition: service_healthy
+volumes:
+  mongo_decoupled_data:

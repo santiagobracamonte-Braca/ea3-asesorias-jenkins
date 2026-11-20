@@ -1,0 +1,29 @@
+EA3 - SISTEMA DE ASESORIAS ACADEMICAS CON JENKINS
+
+IMPORTANTE: este paquete sustituye la primera propuesta de EA3 que reutilizaba el backend FastAPI de sensores. El PDF de caso de estudio exige Node.js + MongoDB, por lo que esta es la version que corresponde al archivo compartido.
+
+CONTENIDO
+- Aplicacion monolitica Node.js/MongoDB con cinco modulos.
+- Arquitectura desacoplada con core y microservicio de Proyectos.
+- Docker Compose separado para ambos despliegues.
+- Jenkinsfile con pruebas, build, push opcional a Docker Hub, CD y health checks.
+- Configuracion de Jenkins y Docker-in-Docker para laboratorio local.
+- Tutorial DOCX preliminar con espacios para capturas autenticas.
+- Analisis cualitativo de seleccion del modulo Proyectos.
+- Guion de sustentacion individual y lista de capturas.
+
+VALIDACION REALIZADA EN PREPARACION
+- Sintaxis JavaScript comprobada con node --check.
+- 8 pruebas unitarias de reglas de negocio aprobadas con node --test.
+- No se pudo ejecutar Docker Compose/Jenkins en el entorno donde se preparo el paquete porque no hay Docker CLI/daemon disponible. Debe ejecutarse en el Windows del estudiante y comprobar los contenedores y puertos.
+
+PRIMEROS PASOS
+1. Extraer el ZIP.
+2. Abrir Docker Desktop y esperar a que indique que esta ejecutandose.
+3. En PowerShell, entrar a la raiz del proyecto.
+4. Ejecutar: docker compose -f docker-compose.monolith.yml up -d --build
+5. Abrir http://localhost:3002 y comprobar /health.
+6. Detener el monolito antes de probar la arquitectura desacoplada.
+7. Leer README.md para iniciar Jenkins, crear el Job y configurar Docker Hub.
+
+NO ENTREGAR EL DOCX COMO VERSION FINAL HASTA INSERTAR LAS CAPTURAS REALES Y COMPLETAR LAS EVIDENCIAS PENDIENTES.

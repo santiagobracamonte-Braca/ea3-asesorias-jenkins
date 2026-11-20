@@ -1,0 +1,30 @@
+services:
+  mongodb:
+    image: mongo:7
+    container_name: asesorias-mongodb-monolith
+    restart: unless-stopped
+    volumes:
+      - mongo_monolith_data:/data/db
+    healthcheck:
+      test: ["CMD", "mongosh", "--quiet", "mongodb://localhost:27017/admin", "--eval", "db.runCommand({ping:1}).ok"]
+      interval: 5s
+      timeout: 5s
+      retries: 15
+  monolith:
+    image: ${DOCKERHUB_NAMESPACE:-local}/iudigital-asesorias-monolith:${IMAGE_TAG:-latest}
+    build:
+      context: .
+      dockerfile: Dockerfile.monolith
+    container_name: iudigital-asesorias-monolith
+    restart: unless-stopped
+    environment:
+      MONGODB_URI: mongodb://mongodb:27017/iudigital_asesorias
+      APP_MODE: monolith
+      PORT: 3000
+    ports:
+      - "3002:3000"
+    depends_on:
+      mongodb:
+        condition: service_healthy
+volumes:
+  mongo_monolith_data:

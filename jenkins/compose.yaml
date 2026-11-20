@@ -1,0 +1,54 @@
+services:
+  docker:
+    image: docker:27-dind
+    container_name: ea3-docker-daemon
+    privileged: true
+    environment:
+      DOCKER_TLS_CERTDIR: /certs
+    volumes:
+      - jenkins-docker-certs:/certs/client
+      - jenkins-docker-data:/var/lib/docker
+    ports:
+      - "2376:2376"
+      - "3002:3002"
+      - "3001:3001"
+    networks:
+      jenkins:
+        aliases:
+          - docker
+    command: ["--storage-driver", "overlay2"]
+    healthcheck:
+      test: ["CMD", "docker", "info"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+    restart: unless-stopped
+  jenkins:
+    build:
+      context: .
+      dockerfile: Dockerfile.jenkins
+    image: ea3-jenkins-local:2.580.2
+    container_name: ea3-jenkins
+    depends_on:
+      docker:
+        condition: service_healthy
+    environment:
+      DOCKER_HOST: tcp://docker:2376
+      DOCKER_CERT_PATH: /certs/client
+      DOCKER_TLS_VERIFY: "1"
+    ports:
+      - "8090:8080"
+      - "50000:50000"
+    volumes:
+      - jenkins-home:/var/jenkins_home
+      - jenkins-docker-certs:/certs/client:ro
+    networks:
+      - jenkins
+    restart: unless-stopped
+volumes:
+  jenkins-home:
+  jenkins-docker-certs:
+  jenkins-docker-data:
+networks:
+  jenkins:
+    driver: bridge

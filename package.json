@@ -1,0 +1,21 @@
+{
+  "name": "iudigital-asesorias-jenkins",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Sistema de asesorias academicas: monolito Node.js/MongoDB y microservicio de proyectos para EA3 Jenkins",
+  "main": "src/server.js",
+  "scripts": {
+    "start:monolith": "node src/server.js monolith",
+    "start:core": "node src/server.js core",
+    "start:projects": "node src/server.js projects",
+    "test": "node --test",
+    "check": "node --check src/server.js && node --check src/models.js && node --check src/routes.js && node --check public/app.js"
+  },
+  "dependencies": {
+    "express": "5.1.0",
+    "mongoose": "8.19.1"
+  },
+  "engines": {
+    "node": ">=22 <23"
+  }
+}
