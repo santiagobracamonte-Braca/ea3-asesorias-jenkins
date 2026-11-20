@@ -49,8 +49,6 @@ pipeline {
     stage('Publicar Docker Hub') {
       when { expression { return params.PUSH_TO_DOCKERHUB } }
       steps {
-        script {
-        }
         withCredentials([usernamePassword(credentialsId: 'dockerhub-creds', usernameVariable: 'DH_USER', passwordVariable: 'DH_TOKEN')]) {
           sh 'echo "$DH_TOKEN" | docker login -u "$DH_USER" --password-stdin'
           sh "docker push ${params.DOCKERHUB_NAMESPACE.trim()}/iudigital-asesorias-monolith:${IMAGE_TAG}"
